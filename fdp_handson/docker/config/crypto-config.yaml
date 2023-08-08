@@ -1,0 +1,36 @@
+# Defines 2 Organisations
+#  - Orderer organization
+#  - Oem
+#  - Dealer
+
+# Orderer for OEM
+OrdererOrgs:
+  - Name: Orderer
+    Domain: oem.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+      
+#### Peers for OEM
+PeerOrgs:
+  # Peer configuration for OEM
+  - Name: Oem
+    Domain: oem.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer1.oem.com
+        CommonName: peer1.oem.com
+    Users:
+      Count: 1
+
+  # Peer configuration for Dealer
+  - Name: Dealer
+    Domain: dealer.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer1.dealer.com
+        CommonName: peer1.dealer.com
+    Users:
+      Count: 1
+
+      

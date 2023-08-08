@@ -1,0 +1,101 @@
+# Compose file for the Garage POC
+# Consists of a Orderer affiliated to OEM, 1 Peer to OEM and 1 Peer to Dealer
+#
+
+version: '2'
+
+# Network Name
+networks:
+  logistics:
+
+# Storage volumes outside the container
+volumes:
+  data-orderer.oem.com:
+  data-peer1.oem.com:
+  data-peer1.dealer.com:
+
+services:
+
+  # Orderer Service
+  orderer.oem.com:
+    container_name: orderer.oem.com
+    image: hyperledger/fabric-orderer:1.4
+    command: orderer
+  # Override environment variables
+    environment: 
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - ORDERER_TLS_ENABLED=false
+  # Host folder mappings
+    volumes:
+      # Folder with genesis block
+      - ${PWD}/config/orderer:/var/hyperledger/config
+      # MSP for Orderer
+      - ${PWD}/config/crypto-config/ordererOrganizations/oem.com/orderers/orderer.oem.com/msp:/var/hyperledger/msp
+      - data-orderer.oem.com:/var/ledger
+    ports:
+      - 7050:7050
+    networks:
+      - logistics
+
+  # Oem peer1
+  peer1.oem.com:
+    container_name: peer1.oem.com
+    image: hyperledger/fabric-peer:1.4
+    # Override variables in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_logistics
+    # Start the peer node
+    command: peer node start
+    # Host folder mappings
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/config/oem:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - ${PWD}/config/crypto-config/peerOrganizations/oem.com/peers/peer1.oem.com/msp:/var/hyperledger/msp
+      # Added to support the TLS setup
+      - ${PWD}/config/crypto-config/peerOrganizations/oem.com/peers/peer1.oem.com/tls:/var/hyperledger/tls
+      - /var/run/:/var/run/
+      - data-peer1.oem.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.oem.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 7051:7051
+      - 7052:7052
+    networks:
+      - logistics
+
+  # Dealer peer1
+  peer1.dealer.com:
+    container_name: peer1.dealer.com
+    image: hyperledger/fabric-peer:1.4
+    # Override variables in this section
+    environment:
+      - FABRIC_CFG_PATH=/var/hyperledger/config
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_logistics
+    # Start the peer node
+    command: peer node start
+    # Host folder mappings
+    volumes:
+      # Folder with channel create tx file
+      - ${PWD}/config/dealer:/var/hyperledger/config
+      # Map the folder with MSP for Peer
+      - ${PWD}/config/crypto-config/peerOrganizations/dealer.com/peers/peer1.dealer.com/msp:/var/hyperledger/msp
+      # Added to support the TLS setup
+      - ${PWD}/config/crypto-config/peerOrganizations/dealer.com/peers/peer1.dealer.com/tls:/var/hyperledger/tls
+      - /var/run/:/var/run/
+      - data-peer1.dealer.com:/var/hyperledger/production
+    depends_on: 
+      - orderer.oem.com
+    # Map the ports on Host VM to container ports
+    ports:
+      - 8051:7051
+      - 8052:7052
+    networks:
+      - logistics

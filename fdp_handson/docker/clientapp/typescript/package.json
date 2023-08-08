@@ -1,0 +1,29 @@
+{
+  "name": "fabric-events",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express-serve-static-core": "^4.16.2",
+    "@types/node": "^13.11.1",
+    "axios": "^0.19.2",
+    "fabric-ca-client": "1.4.7",
+    "fabric-client": "^1.4.0",
+    "fabric-network": "1.4.7",
+    "fixed": "^0.3.1",
+    "fs": "0.0.1-security",
+    "got": "^11.0.3",
+    "it": "^1.1.1",
+    "js-file-download": "^0.4.11",
+    "node-yaml": "^3.1.1",
+    "this": "^1.1.0"
+  }
+}

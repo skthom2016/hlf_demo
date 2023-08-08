@@ -1,0 +1,38 @@
+{
+    "poId": "1",
+    "PoSlVhid": [
+        {
+            "order_sno": 1,
+            "VhIds": [
+                "P1S1L0"
+            ],
+            "line_tot": 5000
+        },
+        {
+            "order_sno": 2,
+            "VhIds": [
+            ],
+            "line_tot": 0
+        },
+        {
+            "order_sno": 3,
+            "VhIds": [
+            ],
+            "line_tot": 0
+        },
+        {
+            "order_sno": 4,
+            "VhIds": [
+            ],
+            "line_tot": 0
+        },
+        {
+            "order_sno": 5,
+            "VhIds": [
+            ],
+            "line_tot": 0
+        }
+    ],
+    "totalAmount": 5000,
+    "status": "Open"
+}
